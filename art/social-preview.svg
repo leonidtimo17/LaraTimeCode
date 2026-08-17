@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" role="img" aria-labelledby="title desc">
+  <title id="title">LaraTimeCode social preview</title>
+  <desc id="desc">Turn failed Laravel requests into replayable regression tests.</desc>
+  <defs>
+    <linearGradient id="background" x1="80" y1="20" x2="1190" y2="640" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#101426"/>
+      <stop offset=".55" stop-color="#1B2040"/>
+      <stop offset="1" stop-color="#5026B9"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientTransform="translate(1020 100) rotate(130) scale(540 440)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9A79FF" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#9A79FF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mark" x1="97" y1="155" x2="387" y2="480" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#B7A4FF"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="640" fill="url(#background)"/>
+  <rect width="1280" height="640" fill="url(#glow)"/>
+  <g opacity=".1" fill="none" stroke="#FFFFFF">
+    <path d="M0 106h1280M0 320h1280M0 534h1280"/>
+    <path d="M213 0v640M640 0v640M1067 0v640"/>
+  </g>
+  <g transform="translate(86 126)">
+    <rect width="360" height="360" rx="82" fill="#12172D" stroke="#8B6BFF" stroke-width="4"/>
+    <path d="m130 104-58 76 58 76" fill="none" stroke="url(#mark)" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="m230 104 58 76-58 76" fill="none" stroke="url(#mark)" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="180" cy="180" r="70" fill="#171B33" stroke="#9477FF" stroke-width="16"/>
+    <path d="M180 138v48l34 23" fill="none" stroke="#FFFFFF" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+    <text x="510" y="245" fill="#FFFFFF" font-size="86" font-weight="750" letter-spacing="-3">LaraTimeCode</text>
+    <text x="515" y="316" fill="#C7B9FF" font-size="31" font-weight="600" letter-spacing="2">CAPTURE · REPLAY · REGRESSION TEST</text>
+    <text x="515" y="390" fill="#E8E9F4" font-size="30">Failed Laravel requests become</text>
+    <text x="515" y="434" fill="#E8E9F4" font-size="30">encrypted, replayable snapshots.</text>
+    <rect x="515" y="477" width="256" height="48" rx="24" fill="#FFFFFF" fill-opacity=".1" stroke="#FFFFFF" stroke-opacity=".22"/>
+    <text x="548" y="510" fill="#FFFFFF" font-size="22" font-weight="650">Laravel 11 · 12 · 13</text>
+  </g>
+</svg>

@@ -1,0 +1,81 @@
+{
+    "name": "laratimecode/laratimecode",
+    "description": "Turn failed Laravel requests into encrypted, locally replayable timecodes and Pest regression tests.",
+    "keywords": [
+        "laravel",
+        "debugging",
+        "error-tracking",
+        "observability",
+        "replay",
+        "testing",
+        "pest"
+    ],
+    "homepage": "https://github.com/leonidtimo17/LaraTimeCode",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Leonid Timofeev",
+            "email": "leonidtimo17@gmail.com",
+            "homepage": "https://github.com/leonidtimo17"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/leonidtimo17/LaraTimeCode/issues",
+        "source": "https://github.com/leonidtimo17/LaraTimeCode"
+    },
+    "require": {
+        "ext-json": "*",
+        "php": "^8.2",
+        "illuminate/console": "^11.0|^12.0|^13.0",
+        "illuminate/contracts": "^11.0|^12.0|^13.0",
+        "illuminate/database": "^11.0|^12.0|^13.0",
+        "illuminate/filesystem": "^11.0|^12.0|^13.0",
+        "illuminate/http": "^11.0|^12.0|^13.0",
+        "illuminate/support": "^11.0|^12.0|^13.0"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.24",
+        "orchestra/testbench": "^9.0|^10.0|^11.0",
+        "phpunit/phpunit": "^11.5|^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "LaraTimeCode\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "LaraTimeCode\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LaraTimeCode\\LaraTimeCodeServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-main": "0.1-dev"
+        }
+    },
+    "scripts": {
+        "test": "@php vendor/bin/phpunit",
+        "format": "@php vendor/bin/pint",
+        "format:test": "@php vendor/bin/pint --test",
+        "check": [
+            "@composer validate --strict",
+            "@format:test",
+            "@test"
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

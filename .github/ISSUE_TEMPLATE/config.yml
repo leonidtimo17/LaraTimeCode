@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Usage questions and ideas
+    url: https://github.com/leonidtimo17/LaraTimeCode/discussions
+    about: Start a Discussion for help or early design feedback.
+  - name: Security vulnerability
+    url: https://github.com/leonidtimo17/LaraTimeCode/security/policy
+    about: Read the private reporting instructions before sharing details.

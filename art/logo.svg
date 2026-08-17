@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">LaraTimeCode logo</title>
+  <desc id="desc">Code brackets around a clock on a violet background.</desc>
+  <defs>
+    <linearGradient id="background" x1="12" y1="8" x2="116" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#171B33"/>
+      <stop offset="1" stop-color="#6D3AF2"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="34" y1="31" x2="96" y2="98" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#C8BBFF"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="120" height="120" rx="28" fill="url(#background)"/>
+  <path d="M45 39 26 64l19 25" fill="none" stroke="url(#accent)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m83 39 19 25-19 25" fill="none" stroke="url(#accent)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="64" cy="64" r="25" fill="#171B33" stroke="#A58CFF" stroke-width="6"/>
+  <path d="M64 49v17l12 8" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="64" cy="64" r="3.5" fill="#FFFFFF"/>
+</svg>
