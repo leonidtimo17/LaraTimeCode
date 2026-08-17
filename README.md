@@ -44,11 +44,11 @@ to reproduce the failure, then converts it into a local debugging workflow:
 Install the latest tagged release from Packagist:
 
 ```bash
-composer require laratimecode/laratimecode
+composer require "laratimecode/laratimecode:^0.1@alpha"
 php artisan vendor:publish --tag=laratimecode-config
 ```
 
-For local development before the Packagist release, add this repository as a
+For local package development, add this repository as a
 [Composer path repository](https://getcomposer.org/doc/05-repositories.md#path):
 
 ```json
