@@ -37,7 +37,7 @@ to reproduce the failure, then converts it into a local debugging workflow:
 ## Requirements
 
 - PHP 8.2 or newer
-- Laravel 11, 12, or 13
+- Laravel 12 or 13
 
 ## Installation
 

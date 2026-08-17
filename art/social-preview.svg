@@ -35,6 +35,6 @@
     <text x="515" y="390" fill="#E8E9F4" font-size="30">Failed Laravel requests become</text>
     <text x="515" y="434" fill="#E8E9F4" font-size="30">encrypted, replayable snapshots.</text>
     <rect x="515" y="477" width="256" height="48" rx="24" fill="#FFFFFF" fill-opacity=".1" stroke="#FFFFFF" stroke-opacity=".22"/>
-    <text x="548" y="510" fill="#FFFFFF" font-size="22" font-weight="650">Laravel 11 · 12 · 13</text>
+    <text x="570" y="510" fill="#FFFFFF" font-size="22" font-weight="650">Laravel 12 · 13</text>
   </g>
 </svg>

@@ -9,7 +9,7 @@ applications and community feedback.
 - [x] recursive redaction and encrypted local storage
 - [x] bounded retention and atomic writes
 - [x] Artisan inspect, replay, generate-test, and delete commands
-- [x] Laravel 11–13 compatibility matrix
+- [x] Laravel 12–13 compatibility matrix
 
 ## 0.2 — More deterministic HTTP replay
 

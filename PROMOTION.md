@@ -21,7 +21,7 @@ I built LaraTimeCode, an open-source Laravel package that captures a sanitized,
 encrypted snapshot when an HTTP request fails. You can inspect it locally, replay
 the request, and generate a Pest regression test from it.
 
-The first alpha supports Laravel 11–13 and is deliberately opt-in. I would love
+The first alpha supports Laravel 12–13 and is deliberately opt-in. I would love
 feedback on the capture format, privacy defaults, and the next replay adapters.
 
 GitHub: https://github.com/leonidtimo17/LaraTimeCode
@@ -32,7 +32,7 @@ GitHub: https://github.com/leonidtimo17/LaraTimeCode
 сохраняет очищенный от секретов и зашифрованный снимок контекста. Затем запрос
 можно изучить, повторить локально и превратить в заготовку Pest-теста.
 
-Первая alpha-версия поддерживает Laravel 11–13 и включается только явно. Буду рад
+Первая alpha-версия поддерживает Laravel 12–13 и включается только явно. Буду рад
 обратной связи по формату снимков, безопасным настройкам и следующим адаптерам
 воспроизведения.
 
