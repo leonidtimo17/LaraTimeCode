@@ -1,5 +1,7 @@
 # Contributing
 
+[Русская версия](CONTRIBUTING.ru.md)
+
 Thanks for helping improve LaraTimeCode.
 
 ## Before opening an issue

@@ -1,5 +1,7 @@
 # Security policy
 
+[Русская версия](SECURITY.ru.md)
+
 ## Supported versions
 
 Until LaraTimeCode reaches a stable release, security fixes are applied to the

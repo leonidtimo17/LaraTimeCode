@@ -5,6 +5,10 @@
 <h1 align="center">LaraTimeCode</h1>
 
 <p align="center">
+  English · <a href="README.ru.md">Русский</a>
+</p>
+
+<p align="center">
   Turn failed Laravel requests into encrypted, replayable snapshots and Pest regression tests.
 </p>
 

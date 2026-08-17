@@ -1,5 +1,7 @@
 # Support
 
+[Русская версия](SUPPORT.ru.md)
+
 Use [GitHub Discussions](https://github.com/leonidtimo17/LaraTimeCode/discussions)
 for usage questions and design ideas.
 

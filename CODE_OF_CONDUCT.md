@@ -1,5 +1,7 @@
 # Contributor Covenant Code of Conduct
 
+[Русская версия](CODE_OF_CONDUCT.ru.md)
+
 ## Our pledge
 
 We pledge to make participation in this project a harassment-free experience for
