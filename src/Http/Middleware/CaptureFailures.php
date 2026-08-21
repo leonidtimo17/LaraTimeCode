@@ -9,7 +9,6 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use LaraTimeCode\Capture\CaptureContext;
 use LaraTimeCode\Capture\FailureRecorder;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -19,7 +18,6 @@ final class CaptureFailures
         private readonly FailureRecorder $recorder,
         private readonly CaptureContext $context,
         private readonly Config $config,
-        private readonly LoggerInterface $logger,
     ) {}
 
     public function handle(Request $request, Closure $next): Response
@@ -43,18 +41,16 @@ final class CaptureFailures
         $this->context->start();
 
         try {
-            return $next($request);
-        } catch (Throwable $exception) {
-            if ($this->recorder->shouldCapture($request, $exception)) {
-                try {
-                    $id = $this->recorder->capture($request, $exception);
-                    $request->attributes->set('_laratimecode_id', $id);
-                } catch (Throwable $captureException) {
-                    $this->logger->warning('LaraTimeCode could not capture a failed request.', [
-                        'exception' => $captureException,
-                    ]);
-                }
+            $response = $next($request);
+            $rendered = $response->exception ?? null;
+
+            if ($rendered instanceof Throwable) {
+                $this->recorder->captureIfNeeded($request, $rendered);
             }
+
+            return $response;
+        } catch (Throwable $exception) {
+            $this->recorder->captureIfNeeded($request, $exception);
 
             throw $exception;
         } finally {

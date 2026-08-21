@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace LaraTimeCode;
 
+use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Http\Client\Events\ConnectionFailed;
 use Illuminate\Http\Client\Events\ResponseReceived;
+use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use LaraTimeCode\Capture\CaptureContext;
+use LaraTimeCode\Capture\FailureRecorder;
 use LaraTimeCode\Capture\FrameworkEventRecorder;
 use LaraTimeCode\Commands\DeleteTimeCodeCommand;
 use LaraTimeCode\Commands\ListTimeCodesCommand;
@@ -21,6 +24,8 @@ use LaraTimeCode\Contracts\SnapshotRepository;
 use LaraTimeCode\Http\Middleware\CaptureFailures;
 use LaraTimeCode\Redaction\Redactor;
 use LaraTimeCode\Storage\FileSnapshotRepository;
+use Psr\Log\LoggerInterface;
+use Throwable;
 
 final class LaraTimeCodeServiceProvider extends ServiceProvider
 {
@@ -29,6 +34,7 @@ final class LaraTimeCodeServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/laratimecode.php', 'laratimecode');
 
         $this->app->scoped(CaptureContext::class, static fn (): CaptureContext => new CaptureContext);
+        $this->app->scoped(FrameworkEventRecorder::class);
 
         $this->app->singleton(Redactor::class, function (): Redactor {
             return new Redactor(
@@ -44,6 +50,7 @@ final class LaraTimeCodeServiceProvider extends ServiceProvider
                 encrypter: $app->make('encrypter'),
                 directory: (string) config('laratimecode.storage.path'),
                 encrypt: (bool) config('laratimecode.storage.encrypt', true),
+                logger: $app->make(LoggerInterface::class),
             );
         });
     }
@@ -83,11 +90,38 @@ final class LaraTimeCodeServiceProvider extends ServiceProvider
         }
 
         $this->app->booted(function (): void {
-            $kernel = $this->app->make(Kernel::class);
+            $this->registerMiddleware();
+            $this->registerExceptionHook();
+        });
+    }
 
-            if (method_exists($kernel, 'prependMiddleware')) {
-                $kernel->prependMiddleware(CaptureFailures::class);
-            }
+    private function registerMiddleware(): void
+    {
+        if (! $this->app->bound(Kernel::class)) {
+            return;
+        }
+
+        $kernel = $this->app->make(Kernel::class);
+
+        if (method_exists($kernel, 'prependMiddleware')) {
+            $kernel->prependMiddleware(CaptureFailures::class);
+        }
+    }
+
+    private function registerExceptionHook(): void
+    {
+        if (! $this->app->bound(ExceptionHandler::class)) {
+            return;
+        }
+
+        $handler = $this->app->make(ExceptionHandler::class);
+
+        if (! method_exists($handler, 'renderable')) {
+            return;
+        }
+
+        $handler->renderable(function (Throwable $exception, Request $request): void {
+            $this->app->make(FailureRecorder::class)->captureIfNeeded($request, $exception);
         });
     }
 }

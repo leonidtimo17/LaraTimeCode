@@ -121,9 +121,11 @@ final class Redactor
             return $value;
         }
 
-        return substr($value, 0, $this->maxStringLength).sprintf(
-            '\n[TRUNCATED %d BYTES]',
-            strlen($value) - $this->maxStringLength,
+        $truncated = mb_strcut($value, 0, $this->maxStringLength, 'UTF-8');
+
+        return $truncated.sprintf(
+            "\n[TRUNCATED %d BYTES]",
+            strlen($value) - strlen($truncated),
         );
     }
 }

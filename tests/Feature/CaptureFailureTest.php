@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace LaraTimeCode\Tests\Feature;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use LaraTimeCode\Capture\FailureRecorder;
 use LaraTimeCode\Contracts\SnapshotRepository;
 use LaraTimeCode\Replay\SnapshotReplayer;
+use LaraTimeCode\Tests\Fixtures\ResponsableFailure;
+use LaraTimeCode\Tests\Fixtures\SelfRenderingFailure;
 use LaraTimeCode\Tests\TestCase;
 use RuntimeException;
 
@@ -55,6 +59,75 @@ final class CaptureFailureTest extends TestCase
         self::assertTrue($result->reproduced());
         self::assertInstanceOf(RuntimeException::class, $result->actualException);
         self::assertCount(1, $repository->all());
+    }
+
+    public function test_it_captures_a_failed_request_while_exception_handling_is_active(): void
+    {
+        $response = $this->postJson('/timecode-test', ['order_id' => 42]);
+        $snapshots = $this->app->make(SnapshotRepository::class)->all();
+
+        $response->assertStatus(500);
+        self::assertCount(1, $snapshots);
+        self::assertSame(RuntimeException::class, $snapshots[0]['exception']['class']);
+        self::assertSame(42, $snapshots[0]['request']['input']['order_id']);
+    }
+
+    public function test_it_captures_exceptions_that_render_themselves(): void
+    {
+        $response = $this->get('/timecode-self-rendering-test');
+        $snapshots = $this->app->make(SnapshotRepository::class)->all();
+
+        $response->assertStatus(503);
+        self::assertCount(1, $snapshots);
+        self::assertSame(SelfRenderingFailure::class, $snapshots[0]['exception']['class']);
+    }
+
+    public function test_it_captures_responsable_exceptions(): void
+    {
+        $response = $this->get('/timecode-responsable-test');
+        $snapshots = $this->app->make(SnapshotRepository::class)->all();
+
+        $response->assertStatus(502);
+        self::assertCount(1, $snapshots);
+        self::assertSame(ResponsableFailure::class, $snapshots[0]['exception']['class']);
+    }
+
+    public function test_it_captures_a_failure_only_once_when_both_paths_run(): void
+    {
+        $recorder = $this->app->make(FailureRecorder::class);
+        $request = Request::create('/timecode-test', 'POST', ['order_id' => 42]);
+        $exception = new RuntimeException('The checkout exploded.');
+
+        $first = $recorder->captureIfNeeded($request, $exception);
+        $second = $recorder->captureIfNeeded($request, $exception);
+
+        self::assertIsString($first);
+        self::assertSame($first, $second);
+        self::assertCount(1, $this->app->make(SnapshotRepository::class)->all());
+    }
+
+    public function test_the_response_hook_and_the_handler_hook_agree_on_one_snapshot(): void
+    {
+        $this->get('/timecode-db-test');
+
+        $snapshots = $this->app->make(SnapshotRepository::class)->all();
+
+        self::assertCount(1, $snapshots);
+        self::assertSame('select 1 as one', $snapshots[0]['execution']['queries'][0]['sql']);
+    }
+
+    public function test_the_shipped_defaults_ignore_exceptions_laravel_renders_as_expected_responses(): void
+    {
+        $defaults = require dirname(__DIR__, 2).'/config/laratimecode.php';
+        $this->app['config']->set(
+            'laratimecode.capture.ignore_exceptions',
+            $defaults['capture']['ignore_exceptions'],
+        );
+
+        $response = $this->get('/timecode-not-found-test');
+
+        $response->assertStatus(404);
+        self::assertSame([], $this->app->make(SnapshotRepository::class)->all());
     }
 
     public function test_capture_is_disabled_by_default_switch(): void

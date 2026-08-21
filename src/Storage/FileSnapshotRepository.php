@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace LaraTimeCode\Storage;
 
 use Illuminate\Contracts\Encryption\Encrypter;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use JsonException;
 use LaraTimeCode\Contracts\SnapshotRepository;
 use LaraTimeCode\Support\SnapshotId;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 final class FileSnapshotRepository implements SnapshotRepository
@@ -20,6 +22,7 @@ final class FileSnapshotRepository implements SnapshotRepository
         private readonly Encrypter $encrypter,
         private readonly string $directory,
         private readonly bool $encrypt = true,
+        private readonly ?LoggerInterface $logger = null,
     ) {}
 
     public function save(array $snapshot): string
@@ -35,7 +38,8 @@ final class FileSnapshotRepository implements SnapshotRepository
         try {
             $json = json_encode(
                 $snapshot,
-                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,
+                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+                    | JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR,
             );
         } catch (JsonException $exception) {
             throw new RuntimeException('Unable to encode the LaraTimeCode snapshot.', 0, $exception);
@@ -94,7 +98,16 @@ final class FileSnapshotRepository implements SnapshotRepository
         $snapshots = [];
 
         foreach ($this->files->glob($this->directory.'/*.repro') ?: [] as $path) {
-            $snapshot = $this->find(pathinfo($path, PATHINFO_FILENAME));
+            try {
+                $snapshot = $this->find(pathinfo($path, PATHINFO_FILENAME));
+            } catch (RuntimeException|FileNotFoundException $exception) {
+                $this->logger?->warning('LaraTimeCode skipped an unreadable snapshot.', [
+                    'path' => $path,
+                    'exception' => $exception,
+                ]);
+
+                continue;
+            }
 
             if ($snapshot !== null) {
                 $snapshots[] = $snapshot;
