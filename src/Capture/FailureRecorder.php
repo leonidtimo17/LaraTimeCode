@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use LaraTimeCode\Contracts\SnapshotRepository;
 use LaraTimeCode\Redaction\Redactor;
 use LaraTimeCode\Support\SnapshotId;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 final class FailureRecorder
@@ -22,7 +23,35 @@ final class FailureRecorder
         private readonly CaptureContext $context,
         private readonly Config $config,
         private readonly Application $app,
+        private readonly LoggerInterface $logger,
     ) {}
+
+    public function captureIfNeeded(Request $request, Throwable $exception): ?string
+    {
+        $recordedId = $request->attributes->get('_laratimecode_id');
+
+        if (is_string($recordedId)) {
+            return $recordedId;
+        }
+
+        if (! $this->shouldCapture($request, $exception)) {
+            return null;
+        }
+
+        try {
+            $id = $this->capture($request, $exception);
+        } catch (Throwable $captureException) {
+            $this->logger->warning('LaraTimeCode could not capture a failed request.', [
+                'exception' => $captureException,
+            ]);
+
+            return null;
+        }
+
+        $request->attributes->set('_laratimecode_id', $id);
+
+        return $id;
+    }
 
     public function shouldCapture(Request $request, Throwable $exception): bool
     {

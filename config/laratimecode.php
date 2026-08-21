@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\RecordsNotFoundException;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -51,7 +54,10 @@ return [
 
         'ignore_exceptions' => [
             AuthenticationException::class,
+            AuthorizationException::class,
             NotFoundHttpException::class,
+            RecordsNotFoundException::class,
+            TokenMismatchException::class,
             ValidationException::class,
         ],
     ],

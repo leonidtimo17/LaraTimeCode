@@ -26,7 +26,7 @@ final class ReplayTimeCodeCommand extends Command
             return self::FAILURE;
         }
 
-        $result = $replayer->replay($snapshot, (bool) $this->option('auth'));
+        $result = $replayer->replay($snapshot, $this->option('auth') ? true : null);
         $this->components->twoColumnDetail('Duration', number_format($result->durationMs, 2).' ms');
         $this->components->twoColumnDetail('Expected exception', $result->expectedException ?? 'none');
         $this->components->twoColumnDetail(

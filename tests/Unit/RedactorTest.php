@@ -26,6 +26,16 @@ final class RedactorTest extends TestCase
         self::assertSame('[REDACTED]', $result['headers']['authorization']);
     }
 
+    public function test_it_truncates_multibyte_strings_without_breaking_encoding(): void
+    {
+        $redactor = new Redactor([], '[REDACTED]', 9);
+        $result = $redactor->redact(str_repeat('привет', 4));
+
+        self::assertSame("прив\n[TRUNCATED 40 BYTES]", $result);
+        self::assertTrue(mb_check_encoding($result, 'UTF-8'));
+        self::assertIsString(json_encode($result, JSON_THROW_ON_ERROR));
+    }
+
     public function test_it_redacts_query_parameters_in_urls(): void
     {
         $redactor = new Redactor(['token']);
